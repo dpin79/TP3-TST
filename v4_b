@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define BITS_PER_INT 32
+
+void cambiarBit(unsigned int *vector, int n, int i, int v) {
+  // Encuentra la posición del bit en el vector.
+  int pos = i / BITS_PER_INT;
+  int bit = i % BITS_PER_INT;
+
+  // Obtiene el valor actual del bit.
+  unsigned int mask = 1 << bit;
+  unsigned int valor = *vector & mask;
+
+  // Asigna el nuevo valor al bit.
+  if (v) {
+    *vector |= mask;
+  } else {
+    *vector &= ~mask;
+  }
+}
+
+void cambiarVector(unsigned int *vector, int n, int i, int k, int v) {
+  // Itera sobre todos los bits a modificar.
+  for (int j = 0; j < n; j += k) {
+    cambiarBit(vector, n, i + j, v);
+  }
+}
+
+int main() {
+  // Declara las variables.
+  int n, i, k, v;
+  unsigned int *vector;
+
+  // Lee el tamaño del vector.
+  printf("Ingrese el tamaño del vector: ");
+  scanf("%d", &n);
+
+  // Valida que el tamaño sea mayor que 0.
+  if (n <= 0) {
+    printf("El tamaño del vector debe ser mayor que 0.\n");
+    return 1;
+  }
+
+  // Declara e inicializa el vector.
+  vector = (unsigned int *)calloc(n, sizeof(unsigned int));
+
+  // Lee los elementos del vector.
+  for (int i = 0; i < n; i++) {
+    printf("Ingrese el elemento %d: ", i);
+    scanf("%u", &vector[i]);
+  }
+
+  // Lee los parámetros de la operación.
+  printf("Ingrese el índice inicial: ");
+  scanf("%d", &i);
+  printf("Ingrese el paso: ");
+  scanf("%d", &k);
+  printf("Ingrese el valor: ");
+  scanf("%d", &v);
+
+  // Llama al procedimiento para modificar el vector.
+  cambiarVector(vector, n, i, k, v);
+
+  // Imprime el vector modificado.
+  for (int i = 0; i < n; i++) {
+    printf("0x%X ", vector[i]);
+  }
+  printf("\n");
+
+  // Libera el vector.
+  free(vector);
+
+  return 0;
+}
